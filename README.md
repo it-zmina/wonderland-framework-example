@@ -59,3 +59,4 @@
    ![](info/link-js.png)
 4. Configure test server with https protocol
    ![](info/configure-server.png)
+5. Investigate library https://glmatrix.net/docs/module-quat.html
