@@ -45,3 +45,17 @@
     1. Navigate to `chrome://inspect/#devices`
     1. Find your device, which will be followed by a set of Oculus browser tabs currently open on the device.
     1. Click **inspect** link under to the Oculus Browser tab you wish to debug.
+
+## Add action to a 3D object
+
+1. Create new JavaScript file for component action
+![](info/js-action.png)
+2. Open JS-file with any editor and configure `init`, `start` and `update` functions
+   ![](info/js-1.png)
+   ![](info/js-2.png)
+   ![](info/js-3.png)
+   ![](info/js-4.png)
+3. Link component to JavaScript file
+   ![](info/link-js.png)
+4. Configure test server with https protocol
+   ![](info/configure-server.png)
