@@ -60,3 +60,24 @@
 4. Configure test server with https protocol
    ![](info/configure-server.png)
 5. Investigate library https://glmatrix.net/docs/module-quat.html
+
+## Configure throwing cube into player
+
+1. Add link to `vec` sub library
+   ![](info/fly_import_sec.png)
+2. Add properties section in cube handle
+   ![](info/fly_properties.png)
+3. Configure handler properties in `Wonderland` application:
+   ![](info/Properties.png)
+4. Add two vectors for working with camera and cube
+   ![](info/fly_init.png)
+5. Add flying cube to `update` function
+   ![](info/fly_update.png)
+6. Add auxiliary function for angle.
+   ![](info/fly_angle.png)
+7. Add auxiliary function for cube initial position.
+   ![](info/fly_spawn.png)
+
+## Tutorials
+
+https://wonderlandengine.com/tutorials/
