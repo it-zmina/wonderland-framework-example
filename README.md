@@ -78,6 +78,136 @@
 7. Add auxiliary function for cube initial position.
    ![](info/fly_spawn.png)
 
+## Challenge: Count hit and miss actions
+
+Initial code
+```javascript
+import {Component, Property} from '@wonderlandengine/api';
+import {quat, vec3} from "gl-matrix";
+
+/**
+ * CubeHandler
+ */
+export class CubeHandler extends Component {
+   static TypeName = 'CubeHandler';
+   /* Properties that are configurable in the editor */
+   static Properties = {
+      vrCamera: Property.object(null),
+      speed: Property.float(5.0),
+      initialDistance: Property.float(30),
+      countSpawnText: Property.object(),
+      countHitText: Property.object(),
+      countMissText: Property.object()
+   };
+   /* Add other component types here that your component may
+    * create. They will be registered with this component */
+   static Dependencies = [];
+
+   init() {
+      console.log('init() with param', this.param);
+      this.rotation = new Float32Array(4)
+      quat.fromEuler(this.rotation, 1, 1, 0)
+      this.cubeQuat = quat.create()
+      this.direction = vec3.create()
+      this.cubeVec = vec3.create()
+      this.cameraVec = vec3.create()
+      this.count = 0
+   }
+
+   start() {
+      console.log('start() with param', this.param);
+      if (this.countSpawnText) {
+         this.spawnValue = this.countSpawnText.getComponent('text')
+      }
+      if (this.countHitText) {
+         this.hitValue = this.countHitText.getComponent('text')
+      }
+      if (this.countMissText) {
+         this.missValue = this.countMissText.getComponent('text')
+      }
+      this.cube = this.object
+      console.log('Object ready for action. Object name: ' + this.cube.name)
+      this.spawn()
+   }
+
+   update(dt) {
+      /* Called every frame. */
+      // Rotate cube
+      quat.scale(this.cubeQuat, this.rotation, dt)
+      this.cube.rotateObject(this.cubeQuat)
+
+      if (this.vrCamera && this.cubeVec && this.cameraVec) {
+         // Move cube
+         vec3.copy(this.cubeVec, this.direction)
+         vec3.scale(this.cubeVec, this.cubeVec, dt)
+         this.cube.translateLocal(this.cubeVec)
+
+         // Check if the cube has passed the camera
+         if (this.angleBetweenCubeAndCamera() > Math.PI / 2) {
+            // TODO remove, for debug only
+            const dist = this.distanceBetweenCubeAndCamera()
+            this.updateHitCount(dist.toFixed(2))
+
+            this.spawn()
+         }
+      }
+   }
+
+   angleBetweenCubeAndCamera() {
+      this.cube.getPositionWorld (this.cubeVec)
+      this.vrCamera.getTranslationWorld(this.cameraVec)
+      vec3.subtract(this.cubeVec, this.cubeVec, this.cameraVec)
+      vec3.normalize(this.cubeVec, this.cubeVec)
+      this.vrCamera.getForward(this.cameraVec)
+      return  vec3.angle(this.cubeVec, this.cameraVec)
+   }
+
+   distanceBetweenCubeAndCamera() {
+      this.cube.getPositionWorld (this.cubeVec)
+      this.vrCamera.getPositionWorld(this.cameraVec)
+
+      return vec3.distance(this.cubeVec, this.cameraVec);
+   }
+
+   spawn() {
+      if (this.vrCamera == null) {
+         console.warn("Can't define player position")
+         return
+      }
+
+      this.vrCamera.getForward(this.direction)
+      vec3.copy(this.cubeVec, this.direction)
+      vec3.scale(this.cubeVec, this.cubeVec, this.initialDistance)
+      this.vrCamera.getPositionWorld(this.cameraVec)
+      vec3.add(this.cubeVec, this.cubeVec, this.cameraVec)
+      this.cube.setPositionWorld(this.cubeVec)
+      vec3.scale(this.direction, this.direction, -this.speed)
+      this.updateCount(++this.count)
+   }
+
+   updateCount(value) {
+      if (!this.spawnValue) return
+
+      this.spawnValue.text = value.toString()
+      console.log(`updated count value to: ${value}`)
+   }
+
+   updateHitCount(value) {
+      if (!this.hitValue) return
+
+      this.hitValue.text = value.toString()
+      console.log(`updated hit value to: ${value}`)
+   }
+
+   updateMissCount(value) {
+      if (!this.missValue) return
+
+      this.missValue.text = value.toString()
+      console.log(`updated miss value to: ${value}`)
+   }
+}
+```
+
 ## Tutorials
 
 https://wonderlandengine.com/tutorials/
