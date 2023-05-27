@@ -79,7 +79,6 @@
    ![](info/fly_spawn.png)
 
 ## Challenge: Count hit and miss actions
-
 Initial code
 ```javascript
 import {Component, Property} from '@wonderlandengine/api';
@@ -207,6 +206,10 @@ export class CubeHandler extends Component {
    }
 }
 ```
+
+Set properties in Wonderland editor
+![](info/Challenge_scene.png)
+
 
 ## Tutorials
 
